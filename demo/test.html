@@ -1,0 +1,41 @@
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../jquery.mrgvalidation.js"></script>
+
+<style>
+.success{
+  border-color:green;
+}
+.error{
+  border-color:red;
+}
+</style>
+
+<form id="a" action="">
+  <input type="text" name="mp" value=""/>
+  <input type="text" name="email" value=""/>
+  <span id="err"></span>
+  <a id="b">aaa</a>
+</form>
+
+<script>
+$(function() {
+  $('#b').click(function() {
+    $('#a').validate({
+      fields: [
+        {
+          name: "mp",
+          regex: /^\d{11}$/,
+          msg: "数字必须为11位"
+        },
+        {
+          name: "email",
+          regex: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
+          msg: "必须是合法的邮箱地址"
+        }
+      ]
+    });
+  });
+});
+
+
+</script>
