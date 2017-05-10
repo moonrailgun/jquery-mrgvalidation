@@ -78,6 +78,8 @@ $(function() {
 
             this.on();
           }
+
+          return result;
         }else{
           return false;
         }
