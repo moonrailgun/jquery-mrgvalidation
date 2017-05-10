@@ -30,6 +30,7 @@ $(function() {
         var _settings = this.settings;
         var _self = this;
         if(_form) {
+          var result = true;
           this.clean(); //清除样式
           if(!this.settings.validateOnetime) {
             // var input = allInput
@@ -41,11 +42,12 @@ $(function() {
               if(_ele) {
                 var container = item.container || _settings.container;
                 if(_regex.test(_ele.val())) {
-                  console.log("success");
+                  // console.log("success");
                   _ele.closest(container).addClass(_settings.success.className);
                   return true;
                 }else{
-                  console.log("error");
+                  // console.log("error");
+                  result = false;
                   _ele.closest(container).addClass(_settings.error.className);
                   _self.showMsg(item);
                   return false;
@@ -63,10 +65,11 @@ $(function() {
               if(_ele) {
                 var container = item.container || _settings.container;
                 if(_regex.test(_ele.val())) {
-                  console.log("success");
+                  // console.log("success");
                   _ele.closest(container).addClass(_settings.success.className);
                 }else{
-                  console.log("error");
+                  // console.log("error");
+                  result = false;
                   _ele.closest(container).addClass(_settings.error.className);
                   _self.showMsg(item);
                 }
@@ -75,6 +78,8 @@ $(function() {
 
             this.on();
           }
+        }else{
+          return false;
         }
       },
       clean: function(ele, field) {
