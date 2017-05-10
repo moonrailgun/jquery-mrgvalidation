@@ -8,13 +8,16 @@ $(function() {
   $.extend($.mrgvalidator, {
     defaults: {
       success: {
-        className: "success"
+        className: 'success'
       },
       error: {
-        className: "error"
+        className: 'error'
       },
-      validateOnetime: false,
-      fields:[]
+      validateOnetime: true,
+      fields:[],
+      container: 'div',
+      showMsgIn: 'EveryInput', // or OnePlace
+      msgContainer: '<span>validate error</span>' // if showMsgIn==='OnePlace', place a selector like .tip
     },
     prototype: {
       init: function() {},
@@ -25,6 +28,7 @@ $(function() {
         // var allInput = $(this.currentForm).find('input');
         var _form = $(this.currentForm);
         var _settings = this.settings;
+        var _self = this;
         if(_form) {
           this.clean(); //清除样式
           if(!this.settings.validateOnetime) {
@@ -35,13 +39,15 @@ $(function() {
 
               var _ele = _form.find('input[name="'+_name+'"]');
               if(_ele) {
+                var container = item.container || _settings.container;
                 if(_regex.test(_ele.val())) {
                   console.log("success");
-                  _ele.addClass(_settings.success.className);
+                  _ele.closest(container).addClass(_settings.success.className);
                   return true;
                 }else{
                   console.log("error");
-                  _ele.addClass(_settings.error.className);
+                  _ele.closest(container).addClass(_settings.error.className);
+                  _self.showMsg(item);
                   return false;
                 }
               }
@@ -55,12 +61,14 @@ $(function() {
 
               var _ele = _form.find('input[name="'+_name+'"]');
               if(_ele) {
+                var container = item.container || _settings.container;
                 if(_regex.test(_ele.val())) {
                   console.log("success");
-                  _ele.addClass(_settings.success.className);
+                  _ele.closest(container).addClass(_settings.success.className);
                 }else{
                   console.log("error");
-                  _ele.addClass(_settings.error.className);
+                  _ele.closest(container).addClass(_settings.error.className);
+                  _self.showMsg(item);
                 }
               }
             });
@@ -69,35 +77,42 @@ $(function() {
           }
         }
       },
-      clean: function() {
+      clean: function(ele, field) {
         // $(this.currentForm)
           // .find('input')
-        $(this.getAllFieldsEle())
-          .removeClass(this.settings.success.className)
-          .removeClass(this.settings.error.className);
-        this.off();
+        if(!!ele) {
+          var container = field.container || this.settings.container;
+          $(ele)
+            .closest(container)
+            .removeClass(this.settings.success.className)
+            .removeClass(this.settings.error.className);
+          this.hideMsg(field);
+        }else{
+          var _self = this;
+          this.getAllFieldsEle().forEach(function(item){
+            $(item.ele)
+              .removeClass(_self.settings.success.className)
+              .removeClass(_self.settings.error.className);
+            _self.hideMsg(item.field);
+          });
+          this.off();
+        }
       },
-      click: function(e) {
-        $(e.target)
-          .removeClass(this.settings.success.className)
-          .removeClass(this.settings.error.className);
+      click: function(item, e) {
+        this.clean(item.ele, item.field);
       },
       on: function() {
-        var keyup = this.keyup;
-        var blur = this.blur;
         var click = this.click;
         var self = this;
-        this.getAllFieldsEle().forEach(function(ele) {
-          ele.addEventListener('click', click.bind(self));
+        this.getAllFieldsEle().forEach(function(item) {
+          item.ele.addEventListener('click', click.bind(self, item));
         });
       },
       off: function() {
-        var keyup = this.keyup;
-        var blur = this.blur;
         var click = this.click;
         var self = this;
-        this.getAllFieldsEle().forEach(function(ele) {
-          ele.removeEventListener('click', click.bind(self));
+        this.getAllFieldsEle().forEach(function(item) {
+          item.ele.removeEventListener('click', click.bind(self, item));
         });
       },
       getAllFieldsEle: function() {
@@ -105,9 +120,43 @@ $(function() {
         var form = $(this.currentForm);
         for (var i = 0; i < this.settings.fields.length; i++) {
           var field = this.settings.fields[i];
-          res.push(form.find('input[name="'+field.name+'"]')[0]);
+          res.push({
+            field: field,
+            ele:form.find('input[name="'+field.name+'"]')[0]
+          });
         }
         return res;
+      },
+      showMsg: function(field) {
+        if(!field) {
+          return;
+        }
+        if(this.settings.showMsgIn === 'EveryInput') {
+          var container = field.container || this.settings.container;
+          var msgContainer = $(this.settings.msgContainer).text(field.msg || 'error').addClass('feedback');
+          $(this.currentForm)
+            .find('input[name="'+field.name+'"]')
+            .closest(container)
+            .append(msgContainer);
+        }else if(this.settings.showMsgIn === 'OnePlace'){
+          $(this.currentForm).find(this.settings.msgContainer).text(field.msg);
+        }
+      },
+      hideMsg: function(field) {
+        if(!field) {
+          return;
+        }
+
+        if(this.settings.showMsgIn === 'EveryInput') {
+          var container = field.container || this.settings.container;
+          var msgContainer = $(this.settings.msgContainer).text(field.msg || 'error').addClass('feedback');
+          var obj = $(this.currentForm)
+            .find('input[name="'+field.name+'"]')
+            .closest(container);
+          obj.find('.feedback').remove();
+        }else if(this.settings.showMsgIn === 'OnePlace') {
+          $(this.currentForm).find(this.settings.msgContainer).text('');
+        }
       }
     }
   });

@@ -1,19 +1,29 @@
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.js"></script>
 <script type="text/javascript" src="../jquery.mrgvalidation.js"></script>
 
 <style>
 .success{
+  border-style: solid;
+  border-width: 1px;
   border-color:green;
 }
 .error{
+  border-style: solid;
+  border-width: 1px;
   border-color:red;
 }
 </style>
 
+<meta charset="utf-8" />
 <form id="a" action="">
-  <input type="text" name="mp" value=""/>
-  <input type="text" name="email" value=""/>
+  <span>
+    <input type="text" name="mp" value=""/>
+  </span>
+  <span>
+    <input type="text" name="email" value=""/>
+  </span>
   <span id="err"></span>
+  <span class="tip"></span>
   <a id="b">aaa</a>
 </form>
 
@@ -21,16 +31,22 @@
 $(function() {
   $('#b').click(function() {
     $('#a').validate({
+      showMsgIn: 'OnePlace',
+      msgContainer: '.tip',
+      validateOnetime: false,
+      // validateOnetime: true,
       fields: [
         {
           name: "mp",
           regex: /^\d{11}$/,
-          msg: "数字必须为11位"
+          msg: "数字必须为11位",
+          container: 'span'
         },
         {
           name: "email",
           regex: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
-          msg: "必须是合法的邮箱地址"
+          msg: "必须是合法的邮箱地址",
+          container: 'span'
         }
       ]
     });
