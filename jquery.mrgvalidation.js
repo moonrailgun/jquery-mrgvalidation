@@ -141,10 +141,12 @@ $(function() {
         if(this.settings.showMsgIn === 'EveryInput') {
           var container = field.container || this.settings.container;
           var msgContainer = $(this.settings.msgContainer).text(field.msg || 'error').addClass('feedback');
-          $(this.currentForm)
+          var _eleContainer = $(this.currentForm)
             .find('input[name="'+field.name+'"]')
-            .closest(container)
-            .append(msgContainer);
+            .closest(container);
+          if(_eleContainer.find('.feedback').length === 0){
+            _eleContainer.append(msgContainer);
+          }
         }else if(this.settings.showMsgIn === 'OnePlace'){
           $(this.currentForm).find(this.settings.msgContainer).text(field.msg);
         }
