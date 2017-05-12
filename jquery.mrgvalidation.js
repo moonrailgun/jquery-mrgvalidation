@@ -1,3 +1,6 @@
+/*
+author: moonrailgun
+*/
 $(function() {
   $.mrgvalidator = function(options, form) {
     this.settings = $.extend(true, {}, $.mrgvalidator.defaults, options);
