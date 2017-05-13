@@ -150,8 +150,11 @@ $(function() {
           if(_eleContainer.find('.feedback').length === 0){
             _eleContainer.append(msgContainer);
           }
-        }else if(this.settings.showMsgIn === 'OnePlace'){
-          $(this.currentForm).find(this.settings.msgContainer).text(field.msg);
+        }else if(this.settings.showMsgIn === 'OnePlace') {
+          var msgContainer = $(this.currentForm).find(this.settings.msgContainer);
+          if($.trim(msgContainer.text()) === '') {
+            msgContainer.text(field.msg);
+          }
         }
       },
       hideMsg: function(field) {
