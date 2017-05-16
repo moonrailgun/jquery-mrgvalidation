@@ -153,7 +153,7 @@ $(function() {
         }else if(this.settings.showMsgIn === 'OnePlace') {
           var msgContainer = $(this.currentForm).find(this.settings.msgContainer);
           if($.trim(msgContainer.text()) === '') {
-            msgContainer.text(field.msg);
+            msgContainer.text(field.msg).addClass('feedback');
           }
         }
       },
@@ -170,7 +170,7 @@ $(function() {
             .closest(container);
           obj.find('.feedback').remove();
         }else if(this.settings.showMsgIn === 'OnePlace') {
-          $(this.currentForm).find(this.settings.msgContainer).text('');
+          $(this.currentForm).find(this.settings.msgContainer).removeClass('feedback').text('');
         }
       }
     }
