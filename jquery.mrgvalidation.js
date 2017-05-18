@@ -3,6 +3,9 @@ author: moonrailgun
 */
 $(function() {
   $.mrgvalidator = function(options, form) {
+    if(!form) {
+      throw new Error('form is invalid! please check your code');
+    }
     this.settings = $.extend(true, {}, $.mrgvalidator.defaults, options);
     this.currentForm = form;
     this.init();
