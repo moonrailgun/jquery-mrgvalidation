@@ -30,6 +30,24 @@ $(function() {
       setDefaults: function(settings) {
         $.extend($.mrgvalidator.defaults, settings);
       },
+      format: function(str, args) {
+        if (arguments.length > 1) {
+          var result = str;
+          for (var i = 1; i < arguments.length; i++) {
+            if (arguments[i] == undefined) {
+              return "";
+            } else {
+              var reg = new RegExp("({[" + (i-1) + "]})", "g");
+              console.log("result",result, reg);
+              result = result.replace(reg, arguments[i]);
+              console.log("result",result);
+            }
+          }
+          return result;
+        } else {
+          return str;
+        }
+      },
       validate: function() {
         // var allInput = $(this.currentForm).find('input');
         var _form = $(this.currentForm);
@@ -146,7 +164,13 @@ $(function() {
         }
         if(this.settings.showMsgIn === 'EveryInput') {
           var container = field.container || this.settings.container;
-          var msgContainer = $(this.settings.msgContainer).text(field.msg || 'error').addClass('feedback');
+          var msgContainer;
+          if(this.settings.msgContainer.indexOf('{0}') >= 0) {
+            var tmp = this.format(this.settings.msgContainer, field.msg||'error');
+            msgContainer = $(tmp).addClass('feedback');
+          }else{
+            msgContainer = $(this.settings.msgContainer).text(field.msg || 'error').addClass('feedback');
+          }
           var _eleContainer = $(this.currentForm)
             .find('input[name="'+field.name+'"]')
             .closest(container);
@@ -167,7 +191,7 @@ $(function() {
 
         if(this.settings.showMsgIn === 'EveryInput') {
           var container = field.container || this.settings.container;
-          var msgContainer = $(this.settings.msgContainer).text(field.msg || 'error').addClass('feedback');
+          // var msgContainer = $(this.settings.msgContainer).text(field.msg || 'error').addClass('feedback');
           var obj = $(this.currentForm)
             .find('input[name="'+field.name+'"]')
             .closest(container);
