@@ -45,6 +45,7 @@ defaults: {
   container: 'div',
   showMsgIn: 'EveryInput', // or OnePlace
   msgContainer: '<span>validate error</span>' // if showMsgIn==='OnePlace', place a selector like .tip
+  // if your want more complex struct like <p><span></span></p>. just set it like <p><span>{0}</span></p>
 }
 ```
 
