@@ -73,3 +73,6 @@ $.mrgvalidator.prototype.setDefaults({...});
 
 单独配置:
 $(**表单DOM**).validate(options);
+
+## For iE8?
+Maybe you need [ieBetter](https://github.com/zhangxinxu/ieBetter.js)
