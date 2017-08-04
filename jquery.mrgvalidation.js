@@ -121,7 +121,9 @@ $(function() {
         }else{
           var _self = this;
           this.getAllFieldsEle().forEach(function(item){
+            var container = item.field.container || _self.settings.container;
             $(item.ele)
+              .closest(container)
               .removeClass(_self.settings.success.className)
               .removeClass(_self.settings.error.className);
             _self.hideMsg(item.field);
